@@ -1,0 +1,18 @@
+{
+  "name": "backend-prisma",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts"
+  },
+  "devDependencies": {
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.6.2"
+  },
+  "dependencies": {
+    "@prisma/client": "^3.10.0",
+    "express": "^4.17.3",
+    "prisma": "^3.10.0"
+  }
+}
