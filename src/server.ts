@@ -1,5 +1,8 @@
 import express, { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import http from 'http';
+import { Server } from 'socket.io';
+import cors from 'cors';
 
 // create app
 const app = express();
@@ -7,6 +10,17 @@ const app = express();
 const prisma = new PrismaClient();
 // middlewares
 app.use(express.json());
+app.use(cors());
+
+const serverHttp = http.createServer(app);
+
+const io = new Server(serverHttp, {
+    cors: {
+        origin: '*'
+    }
+});
+
+io.on("connection", socket => console.log(`User connected on socket ${socket.id}`));
 
 app.post('/posts', async (request: Request, response: Response) => {
     const { title, description } = request.body;
@@ -18,6 +32,8 @@ app.post('/posts', async (request: Request, response: Response) => {
         }
     });
 
+    io.emit("new_post", result);
+
     return response.status(201).json(result);
 });
 
@@ -27,4 +43,4 @@ app.get('/posts', async (request: Request, response: Response) => {
     return response.json(posts);
 });
 
-app.listen(3333, () => console.log('Server is running on port 3333...'));
+serverHttp.listen(3333, () => console.log('Server is running on port 3333...'));
